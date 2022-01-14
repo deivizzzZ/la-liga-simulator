@@ -10,7 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-  <span class="classification">
+  <div class="classification">
     <table>
       <tr>
         <th colspan="3">Club</th>
@@ -22,8 +22,27 @@
         <th>Pts</th>
       </tr>
     </table>
-  </span>
-  <span class="panel"></span>
-  <span class="scoreboard"></span>
+  </div>
+  <div class="panel"></div>
+  <div class="scoreboard">
+    <div class="score">
+      <div class="local">
+        <div class="local-info">
+          <div class="visitor-info">
+            <img src="./img/madrid.png">
+            Real Madrid
+          </div>
+        </div>
+        <div class="local-goals">0</div>
+      </div>
+      <div class="visitor">
+        <div class="visitor-info">
+          <img src="./img/barcelona.png">
+          Barcelona
+        </div>
+        <div class="visitor-goals">0</div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

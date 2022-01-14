@@ -1,3 +1,8 @@
+body {
+  display: flex;
+  justify-content: space-around;
+}
+
 table {
   width: 500px;
   height: 800px;
@@ -11,6 +16,11 @@ th {
 }
 
 td > img {
+  width: 30px;
+  height: 30px;
+}
+
+.visitor-info > img {
   width: 30px;
   height: 30px;
 }
