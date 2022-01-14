@@ -9,47 +9,107 @@ class Team {
     this.goalsFor = 0;
     this.goalsAgainst = 0;
   }
+
   get showName() {
     return this.name;
   }
+
   get showLogo() {
     return this.logo;
   }
+
   get showPoints() {
     return this.points;
   }
+
   get showWins() {
     return this.wins;
   }
+
   get showTies() {
     return this.ties;
   }
+
   get showLoses() {
     return this.loses;
   }
+
   get showGoalsFor() {
     return this.goalsFor;
   }
+
   get showGoalsAgainst() {
     return this.goalsAgainst;
   }
+
   addWin() {
     this.wins++;
   }
+
   addTie() {
     this.ties++;
   }
+
   addLose() {
     this.loses++;
   }
-  set addGoalsFor(goals) {
+
+  addGoalsFor(goals) {
     this.goalsFor += goals;
   }
-  set addGoalsAgainst(goals) {
+
+  addGoalsAgainst(goals) {
     this.goalsAgainst += goals;
   }
-  set addPoints(points) {
+
+  addPoints(points) {
     this.points += points;
+  }
+}
+
+class Match {
+  constructor(local, visitor) {
+    this.local = local;
+    this.visitor = visitor;
+    this.localGoals = 0;
+    this.visitorGoals = 0;
+  }
+
+  addLocalGoals() {
+    const goals = goalGen();
+    this.localGoals = goals;
+    this.local.addGoalsFor(goals);
+    this.visitor.addGoalsAgainst(goals);
+  }
+
+  addVisitorGoals() {
+    const goals = goalGen();
+    this.visitorGoals = goals;
+    this.visitor.addGoalsFor(goals);
+    this.local.addGoalsAgainst(goals);
+  }
+
+  showWinner() {
+    if (this.localGoals > this.visitorGoals) {
+      this.local.addWin();
+      this.local.addPoints(3);
+      this.visitor.addLose();
+    } else if (this.localGoals < this.visitorGoals) {
+      this.local.addLose();
+      this.visitor.addWin();
+      this.visitor.addPoints(3);
+    } else {
+      this.local.addTie();
+      this.local.addPoints(1);
+      this.visitor.addTie();
+      this.visitor.addPoints(1);
+    }
+  }
+}
+
+class Week {
+  constructor(matchArray) {
+    this.matches = matchArray;
   }
 }
 
@@ -78,63 +138,89 @@ const TEAMS = [
 
 const table = document.querySelector("table");
 
+// fill classification board
 function fillTable(array) {
-  for(let team in array) {
+  for (const team in array) {
     // ROW
-    let tr = document.createElement("tr");
+    const tr = document.createElement("tr");
     table.appendChild(tr);
     // POSITION
-    let tdNumber = document.createElement("td");
-    let position = Number(team) + 1;
+    const tdNumber = document.createElement("td");
+    const position = Number(team) + 1;
     tdNumber.innerText = position;
     tr.appendChild(tdNumber);
     // LOGO
-    let tdLogo = document.createElement("td");
+    const tdLogo = document.createElement("td");
     tdLogo.className = "logo";
     tr.appendChild(tdLogo);
-    let imgLogo = document.createElement("img");
+    const imgLogo = document.createElement("img");
     imgLogo.src = array[team].showLogo;
     tdLogo.appendChild(imgLogo);
     // NAME
-    let tdName = document.createElement("td");
+    const tdName = document.createElement("td");
     tdName.className = "name";
     tdName.innerText = array[team].showName;
     tr.appendChild(tdName);
     // WINS
-    let tdWins = document.createElement("td");
+    const tdWins = document.createElement("td");
     tdWins.className = "wins";
     tdWins.innerText = array[team].showWins;
     tr.appendChild(tdWins);
     // TIES
-    let tdTies = document.createElement("td");
+    const tdTies = document.createElement("td");
     tdTies.className = "ties";
     tdTies.innerText = array[team].showTies;
     tr.appendChild(tdTies);
     // LOSES
-    let tdLoses = document.createElement("td");
+    const tdLoses = document.createElement("td");
     tdLoses.className = "loses";
     tdLoses.innerText = array[team].showLoses;
     tr.appendChild(tdLoses);
     // GOALS FOR
-    let tdGoalsFor = document.createElement("td");
+    const tdGoalsFor = document.createElement("td");
     tdGoalsFor.className = "goals-for";
     tdGoalsFor.innerText = array[team].showGoalsFor;
     tr.appendChild(tdGoalsFor);
     // GOALS AGAINST
-    let tdGoalsAgainst = document.createElement("td");
+    const tdGoalsAgainst = document.createElement("td");
     tdGoalsAgainst.className = "goals-against";
     tdGoalsAgainst.innerText = array[team].showGoalsAgainst;
     tr.appendChild(tdGoalsAgainst);
     // POINTS
-    let tdPoints = document.createElement("td");
+    const tdPoints = document.createElement("td");
     tdPoints.className = "points";
     tdPoints.innerText = array[team].showPoints;
     tr.appendChild(tdPoints);
   }
 }
 
+// generate goals per match
+function goalGen() {
+  let rndomGoal;
+  let statsCheck;
+  let supportParam;
+
+  do {
+    supportParam = Math.floor(Math.random() * 150);
+    statsCheck = Math.floor(Math.random() * 1000) + 1;
+
+    if (supportParam >= 0 && supportParam <= 3 && supportParam !== 300 && supportParam !== 600 && statsCheck <= 900) {
+      rndomGoal = supportParam;
+    } else if (supportParam > 3 && supportParam <= 10 && statsCheck > 990 && statsCheck <= 999) {
+      rndomGoal = supportParam;
+    } else if (supportParam > 10 && supportParam <= 20 && statsCheck > 999) {
+      rndomGoal = supportParam;
+    }
+  } while (typeof (rndomGoal) !== typeof (supportParam));
+
+  return rndomGoal;
+}
+
+// initial conditions
 function getStarted() {
   fillTable(TEAMS);
+  const randomList = _.shuffle(TEAMS);
+  console.log(randomList);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
