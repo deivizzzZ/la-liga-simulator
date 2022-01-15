@@ -262,7 +262,7 @@ function goalGen() {
   let supportParam;
 
   do {
-    supportParam = Math.floor(Math.random() * 150);
+    supportParam = Math.floor(Math.random() * 10);
     statsCheck = Math.floor(Math.random() * 1000) + 1;
 
     if (
