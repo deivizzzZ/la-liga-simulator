@@ -146,6 +146,8 @@ const TEAMS = [
   new Team("Villarreal", "./img/villarreal.png"),
 ];
 
+const randomList = _.shuffle(TEAMS);
+
 const table = document.querySelector("table");
 const scoreboard = document.querySelector(".scoreboard");
 
@@ -255,6 +257,13 @@ function fillScore(game) {
   game.checkWinner();
 }
 
+// reset classification
+function resetTable(array) {
+  const tds = document.querySelectorAll("td");
+  tds.forEach(td => td.remove());
+  fillTable(array);
+}
+
 // generate goals per match
 function goalGen() {
   let rndomGoal;
@@ -290,8 +299,10 @@ function goalGen() {
 
 // initial conditions
 function getStarted() {
-  const randomList = _.shuffle(TEAMS);
   fillBoard(randomList);
+  let tableList = _.orderBy(randomList, ["goalsFor"], ["desc"]);
+  tableList = _.orderBy(tableList, ["points", "wins"], ["desc"]);
+  resetTable(tableList);
 }
 
 // button to create initial conditions
