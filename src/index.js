@@ -75,21 +75,31 @@ class Match {
     this.visitorGoals = 0;
   }
 
-  addLocalGoals() {
+  get showLocal() {
+    return this.local;
+  }
+
+  get showVisitor() {
+    return this.visitor;
+  }
+
+  get addLocalGoals() {
     const goals = goalGen();
     this.localGoals = goals;
     this.local.addGoalsFor(goals);
     this.visitor.addGoalsAgainst(goals);
+    return this.localGoals;
   }
 
-  addVisitorGoals() {
+  get addVisitorGoals() {
     const goals = goalGen();
     this.visitorGoals = goals;
     this.visitor.addGoalsFor(goals);
     this.local.addGoalsAgainst(goals);
+    return this.visitorGoals;
   }
 
-  showWinner() {
+  checkWinner() {
     if (this.localGoals > this.visitorGoals) {
       this.local.addWin();
       this.local.addPoints(3);
@@ -133,10 +143,11 @@ const TEAMS = [
   new Team("Real Sociedad", "./img/real.png"),
   new Team("Sevilla", "./img/sevilla.png"),
   new Team("Valencia C.F.", "./img/valencia.png"),
-  new Team("Villarreal", "./img/villarreal.png")
+  new Team("Villarreal", "./img/villarreal.png"),
 ];
 
 const table = document.querySelector("table");
+const scoreboard = document.querySelector(".scoreboard");
 
 // fill classification board
 function fillTable(array) {
@@ -194,6 +205,56 @@ function fillTable(array) {
   }
 }
 
+// fill scoreboard
+function fillBoard(array) {
+  for (let i = 0; i < array.length; i += 2) {
+    let localTeam = array[i];
+    let visitorTeam = array[i + 1];
+    let match = new Match(localTeam, visitorTeam);
+    fillScore(match);
+  }
+}
+
+// fill match score
+function fillScore(game) {
+  // create structure
+  let score = document.createElement("div");
+  score.className = "score";
+  scoreboard.appendChild(score);
+  // LOCAL
+  let localDiv = document.createElement("div");
+  localDiv.className = "local";
+  score.appendChild(localDiv);
+  let localInfo = document.createElement("div");
+  localInfo.className = "local-info";
+  localInfo.innerText = game.showLocal.name;
+  localDiv.appendChild(localInfo);
+  let localLogo = document.createElement("img");
+  localLogo.src = game.showLocal.logo;
+  localInfo.appendChild(localLogo);
+  let localGoals = document.createElement("div");
+  localGoals.className = "local-goals";
+  localGoals.innerText = game.addLocalGoals;
+  localDiv.appendChild(localGoals);
+  // VISITOR
+  let visitorDiv = document.createElement("div");
+  visitorDiv.className = "visitor";
+  score.appendChild(visitorDiv);
+  let visitorInfo = document.createElement("div");
+  visitorInfo.className = "visitor-info";
+  visitorInfo.innerText = game.showVisitor.name;
+  visitorDiv.appendChild(visitorInfo);
+  let visitorLogo = document.createElement("img");
+  visitorLogo.src = game.showVisitor.logo;
+  visitorInfo.appendChild(visitorLogo);
+  let visitorGoals = document.createElement("div");
+  visitorGoals.className = "visitor-goals";
+  visitorGoals.innerText = game.addVisitorGoals;
+  visitorDiv.appendChild(visitorGoals);
+  // check winner
+  game.checkWinner();
+}
+
 // generate goals per match
 function goalGen() {
   let rndomGoal;
@@ -204,14 +265,25 @@ function goalGen() {
     supportParam = Math.floor(Math.random() * 150);
     statsCheck = Math.floor(Math.random() * 1000) + 1;
 
-    if (supportParam >= 0 && supportParam <= 3 && supportParam !== 300 && supportParam !== 600 && statsCheck <= 900) {
+    if (
+      supportParam >= 0 &&
+      supportParam <= 3 &&
+      supportParam !== 300 &&
+      supportParam !== 600 &&
+      statsCheck <= 900
+    ) {
       rndomGoal = supportParam;
-    } else if (supportParam > 3 && supportParam <= 10 && statsCheck > 990 && statsCheck <= 999) {
+    } else if (
+      supportParam > 3 &&
+      supportParam <= 10 &&
+      statsCheck > 990 &&
+      statsCheck <= 999
+    ) {
       rndomGoal = supportParam;
     } else if (supportParam > 10 && supportParam <= 20 && statsCheck > 999) {
       rndomGoal = supportParam;
     }
-  } while (typeof (rndomGoal) !== typeof (supportParam));
+  } while (typeof rndomGoal !== typeof supportParam);
 
   return rndomGoal;
 }
@@ -220,7 +292,7 @@ function goalGen() {
 function getStarted() {
   fillTable(TEAMS);
   const randomList = _.shuffle(TEAMS);
-  console.log(randomList);
+  fillBoard(randomList);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
