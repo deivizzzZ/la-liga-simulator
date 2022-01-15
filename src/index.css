@@ -20,7 +20,16 @@ img {
   height: 30px;
 }
 
+.panel {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .scoreboard {
+  width: 720px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;

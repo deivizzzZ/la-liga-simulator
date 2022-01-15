@@ -208,9 +208,9 @@ function fillTable(array) {
 // fill scoreboard
 function fillBoard(array) {
   for (let i = 0; i < array.length; i += 2) {
-    let localTeam = array[i];
-    let visitorTeam = array[i + 1];
-    let match = new Match(localTeam, visitorTeam);
+    const localTeam = array[i];
+    const visitorTeam = array[i + 1];
+    const match = new Match(localTeam, visitorTeam);
     fillScore(match);
   }
 }
@@ -218,36 +218,36 @@ function fillBoard(array) {
 // fill match score
 function fillScore(game) {
   // create structure
-  let score = document.createElement("div");
+  const score = document.createElement("div");
   score.className = "score";
   scoreboard.appendChild(score);
   // LOCAL
-  let localDiv = document.createElement("div");
+  const localDiv = document.createElement("div");
   localDiv.className = "local";
   score.appendChild(localDiv);
-  let localInfo = document.createElement("div");
+  const localInfo = document.createElement("div");
   localInfo.className = "local-info";
   localInfo.innerText = game.showLocal.name;
   localDiv.appendChild(localInfo);
-  let localLogo = document.createElement("img");
+  const localLogo = document.createElement("img");
   localLogo.src = game.showLocal.logo;
   localInfo.appendChild(localLogo);
-  let localGoals = document.createElement("div");
+  const localGoals = document.createElement("div");
   localGoals.className = "local-goals";
   localGoals.innerText = game.addLocalGoals;
   localDiv.appendChild(localGoals);
   // VISITOR
-  let visitorDiv = document.createElement("div");
+  const visitorDiv = document.createElement("div");
   visitorDiv.className = "visitor";
   score.appendChild(visitorDiv);
-  let visitorInfo = document.createElement("div");
+  const visitorInfo = document.createElement("div");
   visitorInfo.className = "visitor-info";
   visitorInfo.innerText = game.showVisitor.name;
   visitorDiv.appendChild(visitorInfo);
-  let visitorLogo = document.createElement("img");
+  const visitorLogo = document.createElement("img");
   visitorLogo.src = game.showVisitor.logo;
   visitorInfo.appendChild(visitorLogo);
-  let visitorGoals = document.createElement("div");
+  const visitorGoals = document.createElement("div");
   visitorGoals.className = "visitor-goals";
   visitorGoals.innerText = game.addVisitorGoals;
   visitorDiv.appendChild(visitorGoals);
@@ -290,11 +290,17 @@ function goalGen() {
 
 // initial conditions
 function getStarted() {
-  fillTable(TEAMS);
   const randomList = _.shuffle(TEAMS);
   fillBoard(randomList);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+// button to create initial conditions
+const button = document.querySelector(".start");
+button.addEventListener("click", () => {
   getStarted();
+  button.remove();
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  fillTable(TEAMS);
 });
