@@ -2,6 +2,7 @@ class Team {
   constructor(name, logo) {
     this.name = name;
     this.logo = logo;
+    this.matches = [];
     this.points = 0;
     this.wins = 0;
     this.ties = 0;
@@ -150,6 +151,25 @@ const randomList = _.shuffle(TEAMS);
 
 const table = document.querySelector("table");
 const scoreboard = document.querySelector(".scoreboard");
+
+// generate matches calendar
+function fixture(ts) {
+  const mc = ts.length - 1;
+  let sp = 0;
+  let tm = 0;
+  return ts.map((t, i, a) => (a.slice(i + 1)
+    .forEach(function(_, j, b) {
+      sp = (2 * i + j) % mc;
+      tm = (j + mc - i - 1) % (mc - i) + i + 1;
+      t.matches[sp] = a[tm].id;
+      a[tm].matches[sp] = t.id;
+    })
+  , t));
+}
+const tc = 20;
+const teams = Array(tc).fill().map((_, i) => ({ id: "Team_" + i, matches: Array(tc - 1) }));
+const result = fixture(teams);
+console.log(teams);
 
 // fill classification board
 function fillTable(array) {
