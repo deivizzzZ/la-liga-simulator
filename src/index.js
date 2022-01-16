@@ -8,6 +8,7 @@ class Team {
     this.loses = 0;
     this.goalsFor = 0;
     this.goalsAgainst = 0;
+    this.goalsDiff = 0;
     // team id
     this.id;
     // opponents array
@@ -66,6 +67,10 @@ class Team {
     this.goalsAgainst += goals;
   }
 
+  addGoalsDiff() {
+    this.goalsDiff = this.goalsFor - this.goalsAgainst;
+  }
+
   addPoints(points) {
     this.points += points;
   }
@@ -118,6 +123,8 @@ class Match {
       this.visitor.addTie();
       this.visitor.addPoints(1);
     }
+    this.local.addGoalsDiff();
+    this.visitor.addGoalsDiff();
   }
 }
 
@@ -149,8 +156,6 @@ const TEAMS = [
   new Team("Valencia C.F.", "./img/valencia.png"),
   new Team("Villarreal", "./img/villarreal.png"),
 ];
-
-const randomList = _.shuffle(TEAMS);
 
 const table = document.querySelector("table");
 const scoreboard = document.querySelector(".scoreboard");
@@ -332,8 +337,9 @@ function goalGen() {
 
 // initial conditions
 function getStarted() {
-  fillBoard(randomList);
-  let tableList = _.orderBy(randomList, ["goalsFor"], ["desc"]);
+  fillBoard(TEAMS);
+  let tableList = _.orderBy(TEAMS, ["goalsFor"], ["asc"]);
+  tableList = _.orderBy(TEAMS, ["goalsDiff"], ["desc"]);
   tableList = _.orderBy(tableList, ["points", "wins"], ["desc"]);
   resetTable(tableList);
 }
