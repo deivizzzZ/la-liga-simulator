@@ -9,10 +9,6 @@ class Team {
     this.goalsFor = 0;
     this.goalsAgainst = 0;
     this.goalsDiff = 0;
-    // team id
-    this.id;
-    // opponents array
-    this.matches = [];
   }
 
   get showName() {
@@ -167,7 +163,7 @@ function fixture(ts) {
   let tm = 0;
   return ts.map(
     (t, i, a) => (
-      a.slice(i + 1).forEach(function (_, j, b) {
+      a.slice(i + 1).forEach(function(_, j, b) {
         sp = (2 * i + j) % mc;
         tm = ((j + mc - i - 1) % (mc - i)) + i + 1;
         t.matches[sp] = a[tm].id;
