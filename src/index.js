@@ -181,8 +181,7 @@ function generateCalendar(array) {
     e.id = i;
     e.matches = Array(tc - 1);
   });
-  const result = fixture(array);
-  console.log(array);
+  fixture(array);
 }
 
 // fill classification board
@@ -350,4 +349,23 @@ button.addEventListener("click", () => {
 window.addEventListener("DOMContentLoaded", () => {
   fillTable(TEAMS);
   generateCalendar(TEAMS);
+  createAllCalendar();
+  console.log(weeksArray);
 });
+
+function generateWeek(i) {
+  const weekMatches = [];
+  for (const team of TEAMS) {
+    const criteria = (el) => el.id === team.matches[i];
+    const match = new Match(team, TEAMS.find(criteria));
+    weekMatches.push(match);
+  }
+  return weekMatches;
+}
+
+const weeksArray = [];
+function createAllCalendar() {
+  for (let i = 0; i < TEAMS.length - 1; i++) {
+    weeksArray.push(new Week(generateWeek(i)));
+  }
+}
