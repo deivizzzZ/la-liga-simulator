@@ -153,8 +153,35 @@ const TEAMS = [
   new Team("Villarreal", "./img/villarreal.png"),
 ];
 
+const weeksArray = [];
+let tableList;
+let totalWeeks;
+let counter = 1;
+
 const table = document.querySelector("table");
 const scoreboard = document.querySelector(".scoreboard");
+const panel = document.querySelector(".panel");
+const button = document.querySelector(".start");
+const next = document.querySelector(".next");
+const weekInfo = document.querySelector(".week");
+
+// create the complete array of game weeks
+function createAllCalendar() {
+  for (let i = 0; i < TEAMS.length - 1; i++) {
+    weeksArray.push(new Week(generateWeek(i)));
+  }
+}
+
+// generate matches per week
+function generateWeek(i) {
+  const weekMatches = [];
+  for (const team of TEAMS) {
+    const criteria = (el) => el.id === team.matches[i];
+    const match = new Match(team, TEAMS.find(criteria));
+    weekMatches.push(match);
+  }
+  return weekMatches;
+}
 
 // generate matches calendar
 function fixture(ts) {
@@ -242,10 +269,7 @@ function fillTable(array) {
 
 // fill scoreboard
 function fillBoard(array) {
-  for (let i = 0; i < array.length; i += 2) {
-    const localTeam = array[i];
-    const visitorTeam = array[i + 1];
-    const match = new Match(localTeam, visitorTeam);
+  for (const match of array.matches) {
     fillScore(match);
   }
 }
@@ -297,6 +321,23 @@ function resetTable(array) {
   fillTable(array);
 }
 
+// show league winner
+function showWinner() {
+  const winner = tableList[0];
+  console.log(winner);
+  const winnerInfo = document.createElement("div");
+  winnerInfo.className = "winner-info";
+  panel.appendChild(winnerInfo);
+  const winnerLogo = document.createElement("img");
+  winnerLogo.className = "winner-logo";
+  winnerLogo.src = winner.showLogo;
+  winnerInfo.appendChild(winnerLogo);
+  const winnerDescription = document.createElement("p");
+  winnerDescription.className = "winner-description";
+  winnerDescription.innerText = `¡¡${winner.showName.toUpperCase()} ha ganado!!`;
+  winnerInfo.appendChild(winnerDescription);
+}
+
 // generate goals per match
 function goalGen() {
   let rndomGoal;
@@ -330,42 +371,52 @@ function goalGen() {
   return rndomGoal;
 }
 
+// update classification
+function update() {
+  // tableList = _.orderBy(TEAMS, ["goalsFor"], ["asc"]);
+  // tableList = _.orderBy(TEAMS, ["goalsDiff"], ["desc"]);
+  tableList = _.orderBy(TEAMS, ["points", "wins"], ["desc"]);
+  resetTable(tableList);
+  resetInfo();
+}
+
 // initial conditions
 function getStarted() {
-  fillBoard(TEAMS);
-  let tableList = _.orderBy(TEAMS, ["goalsFor"], ["asc"]);
-  tableList = _.orderBy(TEAMS, ["goalsDiff"], ["desc"]);
-  tableList = _.orderBy(tableList, ["points", "wins"], ["desc"]);
-  resetTable(tableList);
+  const firstWeek = weeksArray.shift();
+  fillBoard(firstWeek);
+  update();
+}
+
+function resetInfo() {
+  weekInfo.innerText = "";
+  weekInfo.innerText = `Jornadas ${counter}/${counter + 1}\nde ${totalWeeks * 2}`;
+  counter += 2;
 }
 
 // button to create initial conditions
-const button = document.querySelector(".start");
 button.addEventListener("click", () => {
   getStarted();
   button.remove();
+  next.classList.remove("hidden");
+  weekInfo.classList.remove("hidden");
+});
+
+next.addEventListener("click", () => {
+  scoreboard.innerHTML = "";
+  const nextWeek = weeksArray.shift();
+  if (nextWeek === undefined) {
+    next.remove();
+    weekInfo.remove();
+    showWinner();
+  } else {
+    fillBoard(nextWeek);
+    update();
+  }
 });
 
 window.addEventListener("DOMContentLoaded", () => {
   fillTable(TEAMS);
   generateCalendar(TEAMS);
   createAllCalendar();
-  console.log(weeksArray);
+  totalWeeks = weeksArray.length;
 });
-
-function generateWeek(i) {
-  const weekMatches = [];
-  for (const team of TEAMS) {
-    const criteria = (el) => el.id === team.matches[i];
-    const match = new Match(team, TEAMS.find(criteria));
-    weekMatches.push(match);
-  }
-  return weekMatches;
-}
-
-const weeksArray = [];
-function createAllCalendar() {
-  for (let i = 0; i < TEAMS.length - 1; i++) {
-    weeksArray.push(new Week(generateWeek(i)));
-  }
-}

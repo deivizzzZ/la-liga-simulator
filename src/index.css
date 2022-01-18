@@ -1,6 +1,6 @@
 body {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 table {
@@ -21,22 +21,30 @@ img {
 }
 
 .panel {
-  width: 200px;
+  width: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.week {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
 .scoreboard {
-  width: 720px;
+  width: 820px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
 }
 
 .score {
-  width: 350px;
+  width: 300px;
   height: 100px;
   background-color: black;
   color: white;
@@ -63,4 +71,23 @@ img {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+}
+
+.winner-info {
+  padding: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+}
+
+.winner-logo {
+  width: 100px;
+  height: 100px;
+}
+
+.winner-description {
+  text-align: center;
+  font-weight: bold;
 }
